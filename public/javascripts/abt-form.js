@@ -76,6 +76,8 @@ $('.next-button').hover(
   }
 );
 
+var validAddressCoordinates;
+
 $('.next-button.validate-address').click(
   function(){
     //console.log("Validating Adress...");
@@ -85,7 +87,7 @@ $('.next-button.validate-address').click(
 			url:'https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates?SingleLine=' + singleLineAddress + '&f=json',
 			success: function(data) {
 				if (data.candidates.length > 0) {
-					var validAddressCoordinates = data.candidates[0].location;
+					validAddressCoordinates = data.candidates[0].location;
 					console.log(validAddressCoordinates);
           $('.success p').text("I think I got it. Let's Get You Your Voting Info!");
           $('#location-entry').addClass("animated bounceOutDown d-none");
@@ -258,5 +260,6 @@ $('.next-button.validate-address').click(
 		});
     $('.repeat-password-section').addClass("fold-up");
     $('.success').css("marginTop", 0);
+    return validAddressCoordinates;
   }
 );

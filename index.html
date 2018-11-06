@@ -8,7 +8,6 @@
     <meta name="robots" content="index,nofollow">
     <meta name="keywords" content="US, USA, Election, Voting, Vote, Democracy">
     <meta name="author" content="Andrew Valenski">
-    <meta>
     <link rel="stylesheet" type="text/css" href="public/stylesheets/animate.css">
     <link rel="stylesheet" type="text/css" href="public/stylesheets/abt-Bootstrap-4.css">
     <link rel='stylesheet' type="text/css" href="public/stylesheets/main.css">
@@ -30,12 +29,10 @@
             <div class="row" style="color:antiquewhite;">
                     <div class="col-8 mx-auto my-3 bg-overlay">
             <h3 class="text-center">
-                    <span class="animated zoomIn delay-2s"><i>No, you won't really die</i>> -- that would be horrible. But you will be dead to me. <br /> <br />And not just me, but all your friends (including Ross, Rachel, Phoebe, Joey, Monica and Chandler). </span>
+                    <span class="animated zoomIn delay-2s"><i>No, you won't really die</i> -- that would be horrible. But you will be dead to me. <br /> <br />And not just me, but all your friends (including Ross, Rachel, Phoebe, Joey, Monica and Chandler). </span>
             </h3>
 </div>
 </div>
-          </div>
-        </div>
         <div class="row d-flex h-75">
           <div class="resident-form animated bounceInUp">
             <header>
@@ -44,7 +41,7 @@
             </header>
             <form>
               <div class="input-section email-section">
-                <input id="inputAddress" class="address" list="suggestions" type="text" placeholder="Enter Your Address here!" autocomplete="off"/>
+                <input id="inputAddress" class="address" list="suggestions" placeholder="Enter Your Address here! (i.e. 2003 Union St, Charlotte NC)" autocomplete="off">
                 <datalist id="suggestions">
                   <option id="firstSuggestion" class="selectLocation" value="">
                   <option id="secondSuggestion" class="selectLocation" value="">
@@ -202,13 +199,19 @@
       var fourthSugg = $("#fourthSuggestion");
       var fifthSugg = $("#fifthSuggestion");
       
-      theText.keyup(function (event) {
-      var currentEntry = theText.val();
+      theText.keypress(function (event) {
+        if(event.which == 32) {
+          console.log(event.which);
+          return
+        }
+        else {
+          var currentEntry = theText.val();
       $.ajax({
         type: "GET",
         url: "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/suggest?text=" + currentEntry + "&countryCode=USA&f=json",
         success: function(data) {
           if (data.suggestions) {
+            console.log(suggestions);
             if (data.suggestions[0]) {
               firstSugg.val(data.suggestions[0].text);
             }
@@ -239,7 +242,6 @@
             else {
               return
             }
-            //console.log(data.suggestions[2]);
           }
           else {
             firstSugg.val("Hmmmm, I'm not finding that.");
@@ -262,7 +264,9 @@
           },
         dataType: "json"
       });
+    }
       });
+     
       });
       
     </script>
@@ -291,13 +295,8 @@
         // Widgets
         "esri/widgets/Home",
         "esri/widgets/Zoom",
-        "esri/widgets/Compass",
         "esri/widgets/Search",
-        "esri/widgets/Legend",
-        "esri/widgets/BasemapToggle",
-        "esri/widgets/ScaleBar",
-        "esri/widgets/Attribution",
-      
+
         // Bootstrap
         "bootstrap/Collapse",
         "bootstrap/Dropdown",
@@ -309,13 +308,11 @@
         "calcite-maps/calcitemaps-arcgis-support-v0.9",
       
         "dojo/domReady!"
-      ], function(Map, MapView, Graphic, Home, Zoom, Compass, Search, Legend, BasemapToggle, ScaleBar, Attribution,Collapse, Dropdown, CalciteMaps, CalciteMapArcGISSupport) {
-      
-        /******************************************************************
-         *
-         * Create the map, view and widgets
-         * 
-         ******************************************************************/
+      ], function(Map, MapView, Graphic
+         ,Home, Zoom, Search
+         ,Collapse, Dropdown
+         , CalciteMaps
+         , CalciteMapArcGISSupport) {
       
         // Map
         var map = new Map({
@@ -335,25 +332,26 @@
           ui: {components: []}
         });
       
-        var homePoint = {
+        function addMyLocation (validAddressCoordinates){
+          var homePoint = {
             type: "point",  // autocasts as new Point()
-            longitude: -80.8099154166103,
-            latitude: 35.23576611996296
+            longitude: validAddressCoordinates.x,
+            latitude: validAddressCoordinates.y
             };
-
-        var homeSymbol = {
+            var homeSymbol = {
           type: "picture-marker",
           url: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Map_marker.svg/2000px-Map_marker.svg.png",
           width: 20,
           height: 25
           };
 
-        var pointGraphic = new Graphic({
+          var pointGraphic = new Graphic({
             geometry: homePoint,
             symbol: homeSymbol
             });
-        
-        mapView.graphics.add(pointGraphic);
+
+            mapView.graphics.add(pointGraphic);
+        };
 
         var voteSymbol = {
           type: "picture-marker",
@@ -384,34 +382,7 @@
         var zoom = new Zoom({
           view: mapView
         });
-        mapView.ui.add(zoom, "top-left");
-      
-        var compass = new Compass({
-          view: mapView
-        });
-        mapView.ui.add(compass, "top-left");
-        
-        var basemapToggle = new BasemapToggle({
-          view: mapView,
-          secondBasemap: "satellite"
-        });
-        mapView.ui.add(basemapToggle, "bottom-right");          
-        
-        var scaleBar = new ScaleBar({
-          view: mapView
-        });
-        mapView.ui.add(scaleBar, "bottom-left");
-      
-        var attribution = new Attribution({
-          view: mapView
-        });
-        mapView.ui.add(attribution, "manual");
-      
-        // Panel widgets - add legend
-        var legendWidget = new Legend({
-          container: "legendDiv",
-          view: mapView
-        });
+        mapView.ui.add(zoom, "top-left");     
       
       });
     </script>
