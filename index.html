@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Vote Or Die</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="This is an application that allows voters to get information on their elections, voting locations and election results.">
+    <meta name="robots" content="index,nofollow">
+    <meta name="keywords" content="US, USA, Election, Voting, Vote, Democracy">
+    <meta name="author" content="Andrew Valenski">
+    <meta>
+    <link rel="stylesheet" type="text/css" href="public/stylesheets/animate.css">
+    <link rel="stylesheet" type="text/css" href="public/stylesheets/abt-Bootstrap-4.css">
+    <link rel='stylesheet' type="text/css" href="public/stylesheets/main.css">
+    <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css'>
+    <link rel="stylesheet" href="https://esri.github.io/calcite-maps/dist/css/calcite-maps-bootstrap.min-v0.9.css">
+    <link rel="stylesheet" href="https://esri.github.io/calcite-maps/dist/css/calcite-maps-arcgis-4.x.min-v0.9.css">
+    <link rel="stylesheet" href="https://js.arcgis.com/4.9/esri/css/main.css">
+  </head>
+  <body>
+    <section class="cover-class" id="location-entry">
+      <div class="container-fluid h-100">
+        <div class="row" style="color:antiquewhite;">
+          <div class="col-10 mx-auto my-3 bg-overlay">
+            <h1 class="text-center">
+              <span class="animated zoomIn delay-03s">Vote. </span><span class="animated zoomIn delay-06s">Or. </span><span class="animated zoomIn delay-1s"> Die.</span>
+            </h1>
+        </div>
+    </div>
+            <div class="row" style="color:antiquewhite;">
+                    <div class="col-8 mx-auto my-3 bg-overlay">
+            <h3 class="text-center">
+                    <span class="animated zoomIn delay-2s"><i>No, you won't really die</i>> -- that would be horrible. But you will be dead to me. <br /> <br />And not just me, but all your friends (including Ross, Rachel, Phoebe, Joey, Monica and Chandler). </span>
+            </h3>
+</div>
+</div>
+          </div>
+        </div>
+        <div class="row d-flex h-75">
+          <div class="resident-form animated bounceInUp">
+            <header>
+              <h1>Let's Get You Ready</h1>
+              <p>It's important to have a voting plan and I want to help. Type in your address and we'll begin!</p>
+            </header>
+            <form>
+              <div class="input-section email-section">
+                <input id="inputAddress" class="address" list="suggestions" type="text" placeholder="Enter Your Address here!" autocomplete="off"/>
+                <datalist id="suggestions">
+                  <option id="firstSuggestion" class="selectLocation" value="">
+                  <option id="secondSuggestion" class="selectLocation" value="">
+                  <option id="thirdSuggestion" class="selectLocation" value="">
+                  <option id="fourthSuggestion" class="selectLocation" value="">
+                  <option id="fifthSuggestion" class="selectLocation" value="">
+                </datalist>
+                <div class="animated-button">
+                <span class="icon-paper-plane">
+                <i class="fa fa-globe"></i>
+                </span>
+                <span class="next-button validate-address">
+                <i class="fa fa-paper-plane"></i>
+                </span>
+                </div>
+                <div class="success">
+                <div class="pin bounce"></div>
+                <div class="pulse"></div>
+                <p>Validating Address...</p>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="d-none" id="voting-dashboard" style="height:100%;">
+    <div class="container-fluid h-100">
+    <div class="row h-75 p-2">
+    <div class="col-4" style="padding-top:65px; padding-bottom:65px; overflow-y:auto;">
+    <ul class="nav nav-pills">
+    <li class="nav-item">
+    <a class="nav-link active" href="#yourGovernment">Your Government</a>
+    </li>
+    <li class="nav-item">
+    <a class="nav-link" href="#yourVote">Voting Details</a>
+    </li>
+    <li class="nav-item">
+    <a class="nav-link" href="#yourBrain">Keep Learning</a>
+    </li>
+    </ul>
+    <div id="yourGovernment" class="tableContainer" >
+        <p id="governmentDetails"></p>
+        <div id ="officialDetails" class="card-deck">
+
+        </div>
+    </div>
+    <div id="yourVote" class="tableContainer">
+            <p id="votingDetails"></p>
+            <div id ="ballotDetails" class="card-deck">
+                        
+            </div>
+    </div>
+    <div id="yourBrain" class="tableContainer">
+        <p id="learningDetails"></p>
+    </div>
+    </div>
+    <div class="col-8">
+    <div class="calcite-maps calcite-nav-top">
+    <!-- Navbar -->
+    <nav class="navbar calcite-navbar navbar-fixed-top calcite-text-light calcite-bg-dark">
+    <!-- Menu -->
+    <div class="dropdown calcite-dropdown calcite-text-dark calcite-bg-light" role="presentation">
+    </div>
+    <!-- Title -->
+    <div class="calcite-title calcite-overflow-hidden">
+    <span class="calcite-title-main">Vote. Or. Die.</span>
+    <span class="calcite-title-divider hidden-xs"></span>
+    <span class="calcite-title-sub hidden-xs">Be an adult, make a plan and vote for whomever you want to represent you.</span>
+    </div>
+    <!-- Nav -->
+    <ul class="nav navbar-nav calcite-nav">
+    <li>
+    <div class="calcite-navbar-search calcite-search-expander">
+    <div id="searchWidgetDiv"></div>
+    </div>
+    </li>
+    </ul>
+    </nav>
+    <!--/.calcite-navbar -->
+    <!-- Map  -->
+    <div class="calcite-map calcite-map-absolute">
+    <div id="mapViewDiv"></div>
+    </div>
+    <!-- /.calcite-map -->
+    <!-- Panels -->
+    <div class="calcite-panels calcite-panels-right calcite-text-light calcite-bg-dark panel-group">
+    <!-- Panel - Basemaps -->
+    <div id="panelInfo" class="panel collapse in">
+    <div id="headingInfo" class="panel-heading" role="tab">
+    <div class="panel-title">
+    <a class="panel-toggle" role="button" data-toggle="collapse" href="#collapseInfo"  aria-expanded="true" aria-controls="collapseInfo"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span><span class="panel-label">It's 2018. Vote Smarter.</span></a> 
+    <a class="panel-close" role="button" data-toggle="collapse" tabindex="0" href="#panelInfo"><span class="esri-icon esri-icon-close" aria-hidden="true"></span></a>  
+    </div>
+    </div>
+    <div id="collapseInfo" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingInfo">
+    <div class="panel-body">
+    <h5 >Today's a great day to learn about voting and make arrangements to vote.</h5>
+    <p id="upcomingElection" class="lead text-center"></p>
+    <p id="votingLocation" class="lead">You can vote at: </p>
+    <p id="votingWindow" class>Voting begins on </p>
+    </div>
+    </div>
+    </div>
+    <!-- Panel - Legend -->
+    <div id="panelLegend" class="panel collapse">
+    <div id="headingLegend" class="panel-heading" role="tab">
+    <div class="panel-title">
+    <a class="panel-toggle" role="button" data-toggle="collapse" href="#collapseLegend" aria-expanded="false" aria-controls="collapseLegend"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span><span class="panel-label">Legend</span></a> 
+    <a class="panel-close" role="button" data-toggle="collapse" tabindex="0" href="#panelLegend"><span class="esri-icon esri-icon-close" aria-hidden="true"></span></a> 
+    </div>
+    </div>
+    <div id="collapseLegend" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingLegend">
+    <div class="panel-body">            
+    <div id="legendDiv"></div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    <div class="row h-25 p-2" style="background-color:darkblue;">
+    <div class="col-4">
+            <div class="text-white text-center">
+            <h2>Live Twitter Feed</h2>
+            <h6> Coming Soon </h6>
+        </div>
+    </div>
+    <div class="col-4">
+            <div class="text-white text-center">
+            <h2>Live Election Results</h2>
+            <h6>On the way</h6>
+        </div>
+    </div>
+    <div class="col-4">
+        <div class="text-white text-center">
+            <h2>Probably a Placeholder</h2>
+            <h6>Already Functional!</h6>
+        </div>
+    </div>
+    </div>
+    </div>
+    </section>
+    <script type="text/javascript" src="public/javascripts/jQuery-3.2.1-slim.min.js"></script>
+    <script type="text/javascript" src="public/javascripts/popper-1.12.9.min.js"></script>
+    <script type="text/javascript" src="public/javascripts/abt-bootstrap-4.js"></script>
+    <script type="text/javascript" src="public/javascripts/abt-form.js"></script>
+    <script>
+      $(function () {
+      var theText = $("#inputAddress");
+      var firstSugg = $("#firstSuggestion");
+      var secondSugg = $("#secondSuggestion");
+      var thirdSugg = $("#thirdSuggestion");
+      var fourthSugg = $("#fourthSuggestion");
+      var fifthSugg = $("#fifthSuggestion");
+      
+      theText.keyup(function (event) {
+      var currentEntry = theText.val();
+      $.ajax({
+        type: "GET",
+        url: "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/suggest?text=" + currentEntry + "&countryCode=USA&f=json",
+        success: function(data) {
+          if (data.suggestions) {
+            if (data.suggestions[0]) {
+              firstSugg.val(data.suggestions[0].text);
+            }
+            else {
+              return
+            }
+            if (data.suggestions[1]) {
+              secondSugg.val(data.suggestions[1].text)
+            }
+            else {
+              return
+            }
+            if (data.suggestions[2]) {
+              thirdSugg.val(data.suggestions[2].text);
+            }
+            else {
+              return
+            }
+            if (data.suggestions[3]) {
+              fourthSugg.val(data.suggestions[3].text);
+            }
+            else {
+              return
+            }
+            if (data.suggestions[4]) {
+              fifthSugg.val(data.suggestions[4].text);
+            }
+            else {
+              return
+            }
+            //console.log(data.suggestions[2]);
+          }
+          else {
+            firstSugg.val("Hmmmm, I'm not finding that.");
+          }
+        },
+        error: function(jqXHR, exception) {
+          var outputMessage = '';
+          if (jqXHR.status === 0) {
+            outputMessage = 'Could not connect. \n Please check your network';
+          }
+          else if (jqXHR.status === 404) {
+            outputMessage = 'Hmmm, I could not find the page. This is a <b>404 error</b> which sucks.';
+          }
+          else if (jqXHR === 400) {
+            outputMessage = 'Enter an Address, Friend!';
+          }
+          else {
+            outputMessage = 'Well, something went wrong. I know that.';
+          }
+          },
+        dataType: "json"
+      });
+      });
+      });
+      
+    </script>
+    <script type="text/javascript">
+      var dojoConfig = {
+        packages: [{
+          name: "bootstrap",
+          location: "https://esri.github.io/calcite-maps/dist/vendor/dojo-bootstrap"
+        },
+        {
+          name: "calcite-maps",
+          location: "https://esri.github.io/calcite-maps/dist/js/dojo"
+          
+        }]
+      };
+    </script>
+    <!-- ArcGIS JS 4 -->
+    <script src="https://js.arcgis.com/4.9/"></script>
+    <script>
+      require([
+        // ArcGIS
+        "esri/Map",
+        "esri/views/MapView",
+        "esri/Graphic",
+      
+        // Widgets
+        "esri/widgets/Home",
+        "esri/widgets/Zoom",
+        "esri/widgets/Compass",
+        "esri/widgets/Search",
+        "esri/widgets/Legend",
+        "esri/widgets/BasemapToggle",
+        "esri/widgets/ScaleBar",
+        "esri/widgets/Attribution",
+      
+        // Bootstrap
+        "bootstrap/Collapse",
+        "bootstrap/Dropdown",
+      
+        // Calcite Maps
+        "calcite-maps/calcitemaps-v0.9",
+        
+        // Calcite Maps ArcGIS Support
+        "calcite-maps/calcitemaps-arcgis-support-v0.9",
+      
+        "dojo/domReady!"
+      ], function(Map, MapView, Graphic, Home, Zoom, Compass, Search, Legend, BasemapToggle, ScaleBar, Attribution,Collapse, Dropdown, CalciteMaps, CalciteMapArcGISSupport) {
+      
+        /******************************************************************
+         *
+         * Create the map, view and widgets
+         * 
+         ******************************************************************/
+      
+        // Map
+        var map = new Map({
+            basemap: "gray"
+        });
+        
+        // View
+        var mapView = new MapView({
+          container: "mapViewDiv",
+          map: map,
+          center: [-80, 35],
+          zoom: 3,
+          padding: {
+            top: 50,
+            bottom: 0
+          },
+          ui: {components: []}
+        });
+      
+        var homePoint = {
+            type: "point",  // autocasts as new Point()
+            longitude: -80.8099154166103,
+            latitude: 35.23576611996296
+            };
+
+        var homeSymbol = {
+          type: "picture-marker",
+          url: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Map_marker.svg/2000px-Map_marker.svg.png",
+          width: 20,
+          height: 25
+          };
+
+        var pointGraphic = new Graphic({
+            geometry: homePoint,
+            symbol: homeSymbol
+            });
+        
+        mapView.graphics.add(pointGraphic);
+
+        var voteSymbol = {
+          type: "picture-marker",
+          url: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Logo_vote.svg/2000px-Logo_vote.svg.png",
+          width: 40,
+          height: 50
+          };
+
+
+        // Popup and panel sync
+        mapView.when(function(){
+          CalciteMapArcGISSupport.setPopupPanelSync(mapView);
+        });
+      
+        // Search - add to navbar
+        var searchWidget = new Search({
+          container: "searchWidgetDiv",
+          view: mapView
+        });
+        CalciteMapArcGISSupport.setSearchExpandEvents(searchWidget);
+      
+        // Map widgets
+        var home = new Home({
+          view: mapView
+        });
+        mapView.ui.add(home, "top-left");
+      
+        var zoom = new Zoom({
+          view: mapView
+        });
+        mapView.ui.add(zoom, "top-left");
+      
+        var compass = new Compass({
+          view: mapView
+        });
+        mapView.ui.add(compass, "top-left");
+        
+        var basemapToggle = new BasemapToggle({
+          view: mapView,
+          secondBasemap: "satellite"
+        });
+        mapView.ui.add(basemapToggle, "bottom-right");          
+        
+        var scaleBar = new ScaleBar({
+          view: mapView
+        });
+        mapView.ui.add(scaleBar, "bottom-left");
+      
+        var attribution = new Attribution({
+          view: mapView
+        });
+        mapView.ui.add(attribution, "manual");
+      
+        // Panel widgets - add legend
+        var legendWidget = new Legend({
+          container: "legendDiv",
+          view: mapView
+        });
+      
+      });
+    </script>
+  </body>
+  <footer>
+  </footer>
+</html>

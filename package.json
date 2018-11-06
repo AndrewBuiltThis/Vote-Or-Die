@@ -1,0 +1,36 @@
+{
+  "name": "vote-or-die",
+  "version": "1.0.0",
+  "description": "This is an application aimed at providing useful information to voters in the United States",
+  "main": "app.js",
+  "dependencies": {
+    "@babel/core": "^7.1.2",
+    "gulp": "^3.9.1",
+    "gulp-babel": "^8.0.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-load-plugins": "^1.5.0",
+    "gulp-sass": "^4.0.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "Vote",
+    "Election",
+    "US",
+    "Midterm",
+    "Presidential",
+    "President",
+    "Senate",
+    "Congress",
+    "House",
+    "of",
+    "Representatives",
+    "GIS",
+    "Governement",
+    "Democracy"
+  ],
+  "author": "Andrew Valenski",
+  "license": "MIT"
+}
