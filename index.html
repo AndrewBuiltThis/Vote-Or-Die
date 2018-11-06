@@ -49,12 +49,12 @@
                   <option id="fourthSuggestion" class="selectLocation" value="">
                   <option id="fifthSuggestion" class="selectLocation" value="">
                 </datalist>
-                <div class="animated-button">
+                <div class="animated-button" id="buttonTempId">
                 <span class="icon-paper-plane">
                 <i class="fa fa-globe"></i>
                 </span>
                 <span class="next-button validate-address">
-                <i class="fa fa-paper-plane"></i>
+                <i class="fa fa-paper-plane" ></i>
                 </span>
                 </div>
                 <div class="success">
@@ -84,12 +84,16 @@
     </li>
     </ul>
     <div id="yourGovernment" class="tableContainer" >
+        <h3 class="text-center">Whose In Office</h3>
         <p id="governmentDetails"></p>
         <div id ="officialDetails" class="card-deck">
 
         </div>
     </div>
+    <hr>
+    <hr>
     <div id="yourVote" class="tableContainer">
+      <h3 class="text-center">What You're Voting On</h3>
             <p id="votingDetails"></p>
             <div id ="ballotDetails" class="card-deck">
                         
@@ -179,8 +183,22 @@
     </div>
     <div class="col-4">
         <div class="text-white text-center">
-            <h2>Probably a Placeholder</h2>
-            <h6>Already Functional!</h6>
+          <div class="list-group p-2">
+            <a href="#" class="list-group-item list-group-item-action flex-column align-items-start active bg-gradient">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">
+                        Go Vote! Then Read This!
+                    </h5>
+                    <small>Updated 11/6/2018</small>
+                </div>
+                <small class="mb-1">Welcome to <i>Vote or Die</i>, an application I built in a couple hours prior to the 2018 Midterm Elections. Go learn about your election and have some fun making democracy happen!</small>
+             </a>
+            <a href="https://github.com/AndrewBuiltThis/" class="list-group-item list-group-item-action flex-column align-items-start">
+                <p class="mb-1">Like this application? Me too.</p>
+                <small class="text-muted">Check out some more of my work using the below button.</small>
+                </a><a href="https://AndrewBuiltThis.com" target="_blank" class="btn btn-primary">Andrew Built This</a>
+            
+        </div>
         </div>
     </div>
     </div>
@@ -201,7 +219,6 @@
       
       theText.keypress(function (event) {
         if(event.which == 32) {
-          console.log(event.which);
           return
         }
         else {
@@ -211,7 +228,6 @@
         url: "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/suggest?text=" + currentEntry + "&countryCode=USA&f=json",
         success: function(data) {
           if (data.suggestions) {
-            console.log(suggestions);
             if (data.suggestions[0]) {
               firstSugg.val(data.suggestions[0].text);
             }
@@ -332,11 +348,12 @@
           ui: {components: []}
         });
       
-        function addMyLocation (validAddressCoordinates){
-          var homePoint = {
+        function pinDrop(){
+          setTimeout(function () {
+            var homePoint = {
             type: "point",  // autocasts as new Point()
-            longitude: validAddressCoordinates.x,
-            latitude: validAddressCoordinates.y
+            longitude: window.validAddressCoordinates.x,
+            latitude: window.validAddressCoordinates.y
             };
             var homeSymbol = {
           type: "picture-marker",
@@ -351,7 +368,11 @@
             });
 
             mapView.graphics.add(pointGraphic);
-        };
+            mapView.center = [ window.validAddressCoordinates.x,  window.validAddressCoordinates.y];
+            mapView.zoom = 15;
+          }, 1000)};
+
+        document.getElementById("buttonTempId").onclick = function() {pinDrop()};
 
         var voteSymbol = {
           type: "picture-marker",
@@ -359,7 +380,6 @@
           width: 40,
           height: 50
           };
-
 
         // Popup and panel sync
         mapView.when(function(){

@@ -96,6 +96,7 @@ $('.next-button.validate-address').click(
             type: "GET",
             url: "https://www.googleapis.com/civicinfo/v2/representatives?key=AIzaSyCdC_WVXwC5CpyDo6czd4smKHYzFO0Cqa4&address=" + singleLineAddress + "&electionId=6000",
             success: function(data) {
+              console.log(data);
               for (index in data.offices){
                 // For all offices
                 for (rep in data.offices[index].officialIndices){
@@ -103,15 +104,61 @@ $('.next-button.validate-address').click(
                 }
               }
               for (official in data.officials) {
-                var officialTitle = data.officials[official].title;
-                var officialName = data.officials[official].name;
-                var officialParty = data.officials[official].party;
-                var officialPhone = data.officials[official].phones[0];
-                var officialAddress = data.officials[official].address[0].line1;
-                var officialCity = data.officials[official].address[0].city;
-                var officialState = data.officials[official].address[0].state;
-                var officialZIP = data.officials[official].address[0].zip;
-                var officialURL = data.officials[official].urls[0];
+                if (data.officials[official].title) {
+                  var officialTitle = data.officials[official].title;
+                }
+                else {
+                  var officialTitle = "Elected Official"
+                }
+                if (data.officials[official].name) {
+                  var officialName = data.officials[official].name;
+                }
+                else {
+                  var officialName = "Name Unknown"
+                }
+                if (data.officials[official].party) {
+                  var officialParty = data.officials[official].party;
+                }
+                else {
+                  var officialParty = "Unkown Affiliation"
+                }
+                if (data.officials[official].phones) {
+                  var officialPhone = data.officials[official].phones[0];
+                }
+                else {
+                  var officialPhone = "No Phone Number"
+                }
+                if (data.officials[official].address) {
+                  var officialAddress = data.officials[official].address[0].line1;
+                }
+                else {
+                  var officialAddress = "Work Location"
+                }
+                if (data.officials[official].address) {
+                  var officialCity = data.officials[official].address[0].city;
+                }
+                else {
+                  var officialCity = "Unknown City"
+                }
+                if (data.officials[official].address) {
+                  var officialState = data.officials[official].address[0].state;
+                }
+                else {
+                  var officialState = "Unknown State"
+                }
+                if (data.officials[official].address) {
+                  var officialZIP = data.officials[official].address[0].zip;
+                }
+                else {
+                  var officialZIP = "Unknown ZIP"
+                }
+                if (data.officials[official].urls) {
+                  var officialURL = data.officials[official].urls[0];
+                }
+                else {
+                  var officialURL = "No Website Provided"
+                }
+
                 var officialModalID = official + "_" + data.officials[official].title;
                 //console.log(data.officials);
                 if (data.officials[official].party === 'Republican'){
@@ -168,30 +215,139 @@ $('.next-button.validate-address').click(
             url: "https://www.googleapis.com/civicinfo/v2/voterinfo?key=AIzaSyCdC_WVXwC5CpyDo6czd4smKHYzFO0Cqa4&address=" + singleLineAddress + "&electionId=6000",
             success: function(data) {
               //console.log(data);
-              $('#upcomingElection').append((data.election.name) + " on ");
-              $('#upcomingElection').append((data.election.electionDay) + "<br />");
-              $('#votingLocation').append((data.pollingLocations[0].address.locationName) + " located at ");
-              $('#votingLocation').append((data.pollingLocations[0].address.line1) + ", ");
-              $('#votingLocation').append((data.pollingLocations[0].address.city) + ", ");
-              $('#votingLocation').append((data.pollingLocations[0].address.state) + ". <br/>");
-              $('#votingWindow').append((data.pollingLocations[0].startDate) + "and ends on");
-              $('#votingWindow').append((data.pollingLocations[0].endDate) + ". Voting will take place on ");
-              $('#votingWindow').append((data.pollingLocations[0].pollingHours) + ". <br /> <br /> Additional Info: ");
-              $('#votingWindow').append((data.pollingLocations[0].notes) + ".");
-              $('#votingDetails').append((data.state[0].electionAdministrationBody) + "<br />");
-              $('#votingDetails').append((data.state[0].local_jurisdiction) + "<br />");
+              if (data.election.name) {
+                var electionName = data.election.name;
+              }
+              else {
+                var electionName = "Election / Vote"
+              }
+
+              if (data.election.electionDay) {
+                var electionDay = data.election.electionDay;
+              }
+              else {
+                var electionDay = "Election Date Unknown"
+              }
+
+              if(data.pollingLocations){
+                if (data.pollingLocations[0]){
+                  if (data.pollingLocations[0].address) {
+                    if (data.pollingLocations[0].address.locationName) {
+                      var votingLocation = data.pollingLocations[0].address.locationName;
+                    }
+                    else {
+                      var votingLocation = "Voting Location Unknown"
+                    }
+                    if (data.pollingLocations[0].address.line1){
+                      var votingAddress = data.pollingLocations[0].address.line1;
+                    }
+                    else {
+                      var votingAddress = "No Address Found"
+                    }
+                    if (data.pollingLocations[0].address.city){
+                      var votingCity = data.pollingLocations[0].address.city;
+                    }
+                    else {
+                      var votingCity = "City Unknown"
+                    }
+                    if (data.pollingLocations[0].address.state){
+                      var votingState = data.pollingLocations[0].address.state;
+                    }
+                    else {
+                      var votingState = "State Unknown"
+                    }
+                  }
+                  else {
+                    var votingLocation = "Voting Location Unknown";
+                    var votingAddress = "No Address Found";
+                    var votingCity = "City Unknown";
+                    var votingState = "State Unknown";
+                  }
+                  if (data.pollingLocations[0].startDate) {
+                    var voteStartDate = data.pollingLocations[0].startDate;
+                  }
+                  else {
+                    var voteStartDate = "Start Date Unknown";
+                  }
+                  if (data.pollingLocations[0].endDate) {
+                    var voteEndDate = data.pollingLocations[0].endDate;
+                  }
+                  else {
+                    var voteEndDate = "End Date Unknown";
+                  }
+                  if (data.pollingLocations[0].pollingHours) {
+                    var votingHours = data.pollingLocations[0].pollingHours;
+                  }
+                  else {
+                    var votingHours = "Voting Hours Unknown";
+                  }
+                  if (data.pollingLocations[0].notes){
+                    var votingNotes = data.pollingLocations[0].notes;
+                  }
+                  else {
+                    var votingNotes = "No Additional Information Provided";
+                  }
+                }
+                else {
+                  var votingLocation = "Could Not Locate Nearest Voting Location";
+                  var votingAddress = "NA";
+                  var votingCity = "NA";
+                  var votingState = "NA";
+                  var voteStartDate = "Start Date Unknown";
+                  var voteEndDate = "End Date Unknown";
+                  var votingHours = "Voting Hours Unknown";
+                  var votingNotes = "No Additional Information Provided";
+                }
+              }
+              else {
+                var votingLocation = "Could Not Locate Nearest Voting Location";
+                var votingAddress = "NA";
+                var votingCity = "NA";
+                var votingState = "NA";
+                var voteStartDate = "NA";
+                var voteEndDate = "NA";
+                var votingHours = "NA";
+                var votingNotes = "NA";
+              }
+
+              $('#upcomingElection').append(electionName + " on ");
+              $('#upcomingElection').append(electionDay + "<br />");
+              $('#votingLocation').append(votingLocation + " located at ");
+              $('#votingLocation').append(votingAddress + ", ");
+              $('#votingLocation').append(votingCity + ", ");
+              $('#votingLocation').append(votingState + ". <br/>");
+              $('#votingWindow').append(voteStartDate + "and ends on");
+              $('#votingWindow').append(voteEndDate + ". Voting will take place on ");
+              $('#votingWindow').append(votingHours + ". <br /> <br /> Additional Info: ");
+              $('#votingWindow').append(votingNotes + ".");
+              //$('#votingDetails').append((data.state[0].electionAdministrationBody) + "<br />");
+              //$('#votingDetails').append((data.state[0].local_jurisdiction) + "<br />");
               for (contest in data.contests) {
+                var candidateSummary = "";
                 var electionID = contest + "_" + data.contests[contest].district.scope + data.contests[contest].type;
-                var voteType = data.contests[contest].type;
-                var voteScope = data.contests[contest].district.scope;
-                var voteDistrict = data.contests[contest].district.name;
+                if (data.contests[contest].type) {
+                  var voteType = data.contests[contest].type;
+                }
+                else {
+                  var voteType = "Vote";
+                }
+                if (data.contests[contest].district.scope) {
+                  var voteScope = data.contests[contest].district.scope;
+                }
+                else {
+                  var voteScope = "Local - National";
+                }
+                if (data.contests[contest].district.name) {
+                  var voteDistrict = data.contests[contest].district.name;
+                }
+                else {
+                  var voteDistrict = "Your District";
+                }
                 if (data.contests[contest].candidates === undefined || data.contests[contest].candidates.length == 0) {
                   var candidateCount = 0;
                 }
                 else {
                   var candidateCount = data.contests[contest].candidates.length;
-                  //console.log(data.contests[contest]);
-                 // console.log(data.contests[contest].candidates.length);
                   for (candidate in data.contests[contest].candidates) {
                     var candidateName = data.contests[contest].candidates[candidate].name;
                     if (data.contests[contest].candidates[candidate].party){
@@ -201,7 +357,7 @@ $('.next-button.validate-address').click(
                       var candidateParty = 'No Party Specified'
                     }
                     var candidateString = `<p> ${candidateName} (${candidateParty}) is running for this position. Recent news on this candidate can be found <a href="https://news.google.com/search?q=${candidateName}&hl=en-US&gl=US&ceid=US%3Aen" target="_blank">here. </a></p>`
-                    var candidatesString = candidatesString + candidateString;
+                    candidateSummary = candidateSummary + candidateString;
                   }
                 }
                 if (data.contests[contest].office === undefined) {
@@ -209,6 +365,18 @@ $('.next-button.validate-address').click(
                 }
                 else {
                   var officeType = data.contests[contest].office
+                }
+                if (data.contests[contest].referendumTitle) {
+                  var referendumTitle = data.contests[contest].referendumTitle;
+                }
+                else {
+                  var referendumTitle = "";
+                }
+                if (data.contests[contest].referendumText) {
+                  var referendumText = data.contests[contest].referendumText;
+                }
+                else {
+                  var referendumText = "";
                 }
                 $('#ballotDetails').append(
                   `<div class="card mb-4"><div class="card-body"><h4 class="card-title">${voteType}</h4><p class="card-text">${officeType}</p><p class="card-text text-center"><button type="button" class="btn btn-info btn-small" data-toggle="modal" data-target="#${electionID}">More Info</button></p></div></div>`
@@ -231,8 +399,11 @@ $('.next-button.validate-address').click(
                             <br />
                             There are ${candidateCount} candidates involved in this event.
                             <br />
+                            ${candidateSummary}
                             <br />
-                            ${candidatesString}
+                            <b>${referendumTitle}</b>
+                            <br />
+                            <i>${referendumText}</i>
                           </p>
                         </div>
                         <div class="modal-footer">
